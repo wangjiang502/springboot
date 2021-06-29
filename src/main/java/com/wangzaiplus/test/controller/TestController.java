@@ -63,6 +63,23 @@ public class TestController {
         return testService.send(mail);
     }
 
+    @PostMapping("sendmail")
+    ServerResponse testSendMail() {
+//        Errors errors = null;
+        Mail mail;
+//        if (errors.hasErrors()) {
+//            String msg = errors.getFieldError().getDefaultMessage();
+//            return ServerResponse.error(msg);
+//        }
+        Mail mail1 = new Mail();
+        mail1.setContent("正文");
+        mail1.setTo("851319660@qq.com");
+        mail1.setTitle("标题");
+        mail1.setMsgId("13131");
+        return testService.send(mail1);
+
+    }
+
     @PostMapping("single")
     public ServerResponse single(int size) {
         List<User> list = Lists.newArrayList();

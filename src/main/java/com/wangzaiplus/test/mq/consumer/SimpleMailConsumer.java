@@ -39,7 +39,6 @@ public class SimpleMailConsumer {
             log.info("重复消费, msgId: {}", msgId);
             return;
         }
-
         MessageProperties properties = message.getMessageProperties();
         long tag = properties.getDeliveryTag();
 
@@ -51,5 +50,4 @@ public class SimpleMailConsumer {
             channel.basicNack(tag, false, true);
         }
     }
-
 }

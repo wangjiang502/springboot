@@ -31,7 +31,7 @@ public class UserController {
         }
     }
 
-    @PostMapping
+    @PostMapping("add")
     public String add(User user) {
         userService.add(user);
         return "nice";
@@ -53,5 +53,6 @@ public class UserController {
     public ServerResponse login(String username, String password) {
         return userService.login(username, password);
     }
+
 
 }

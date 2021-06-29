@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-//@Component
+@Component
 @Slf4j
 public class ResendMsg {
 
@@ -25,14 +25,12 @@ public class ResendMsg {
 
     // 最大投递次数
     private static final int MAX_TRY_COUNT = 3;
-
     /**
      * 每30s拉取投递失败的消息, 重新投递
      */
-    @Scheduled(cron = "0/30 * * * * ?")
+    @Scheduled(cron = "0/5 * * * * ?")
     public void resend() {
         log.info("开始执行定时任务(重新投递消息)");
-
         List<MsgLog> msgLogs = msgLogService.selectTimeoutMsg();
         msgLogs.forEach(msgLog -> {
             String msgId = msgLog.getMsgId();
@@ -43,12 +41,12 @@ public class ResendMsg {
                 msgLogService.updateTryCount(msgId, msgLog.getNextTryTime());// 投递次数+1
 
                 CorrelationData correlationData = new CorrelationData(msgId);
-                rabbitTemplate.convertAndSend(msgLog.getExchange(), msgLog.getRoutingKey(), MessageHelper.objToMsg(msgLog.getMsg()), correlationData);// 重新投递
+                rabbitTemplate.convertAndSend(msgLog.getExchange(), msgLog.getRoutingKey(),
+                        MessageHelper.objToMsg(msgLog.getMsg()), correlationData);// 重新投递
 
                 log.info("第 " + (msgLog.getTryCount() + 1) + " 次重新投递消息");
             }
         });
-
         log.info("定时任务执行结束(重新投递消息)");
     }
 
